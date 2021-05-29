@@ -1,13 +1,13 @@
 <template lang="pug">
 .device-connect-button
-    button.button.connect(:class="{disabled: device.connectOptions.length === 0}" type="button" @click="handleConnectClick" title="Подключиться к устройству")
+    button.button.connect(:class="{disabled: !device.connection_options}" type="button" @click="handleConnectClick" title="Подключиться к устройству")
         img.icon(:src="connectIcon")
-        | {{ device.connectOptions.length > 0 ? currentOption.verboseName : 'Подключение недоступно' }}
-    button.button.choose(:class="{disabled: device.connectOptions.length === 0}" type="button" title="Подключиться к устройству" @click.stop="toggleDropdown")
+        | {{ device.connection_options ? currentOption.name : 'Подключение недоступно' }}
+    button.button.choose(:class="{disabled: !device.connection_options}" type="button" title="Подключиться к устройству" @click.stop="toggleDropdown")
         img.icon(:src="dropdownIcon")
-    .dropdown(:class="{active: dropdownActive}" v-if="device.connectOptions.length > 0")
+    .dropdown(:class="{active: dropdownActive}" v-if="device.connection_options")
         ul.option-list
-            li.option(v-for="option in device.connectOptions" :key="option.name" @click="handleOptionClick(option)") {{ option.verboseName }}
+            li.option(v-for="option in device.connection_options" :key="option.proto" @click="handleOptionClick(option)") {{ option.name }}
 </template>
 
 <script>
@@ -32,7 +32,7 @@ export default {
             this.dropdownActive = !this.dropdownActive;
         },
         handleConnectClick () {
-            if (this.currentOption !== undefined) {
+            if (this.currentOption) {
                 this.connect();
             }
         },
@@ -42,7 +42,7 @@ export default {
         }
     },
     beforeMount () {
-        this.currentOption = this.device.connectOptions[0];
+        this.currentOption = this.device.connection_options[0] || null;
     }
 }
 </script>

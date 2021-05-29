@@ -174,18 +174,11 @@ export default {
             }
         }
     ],
-    connectOptions: [
-        {
-            name: 'ssh',
-            verboseName: 'SSH'
-        },
-        {
-            name: 'telnet',
-            verboseName: 'Telnet'
-        },
-        {
-            name: 'vnc',
-            verboseName: 'VNC'
-        }
-    ]
+    connectionOptionsVerbose: {
+            ssh: 'SSH',
+            telnet: 'Telnet',
+            http: 'Веб (HTTP)',
+            https: 'Веб',
+            vnc: 'VNC'
+    }
 }

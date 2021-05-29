@@ -47,7 +47,7 @@ export default new Vuex.Store({
           id: 'id',
           name: 'name',
           value: 'value',
-          linkWith: 'connectedTo',
+          linkWith: 'connected_with',
           children: 'children',
           href: 'icon',
         },
@@ -63,7 +63,7 @@ export default new Vuex.Store({
 
         nodes: {
           label: {
-            text: '{name}',
+            text: '{address}',
             verticalCenter: 'top',
             dy: 12,
             fill: '#000'
@@ -150,8 +150,8 @@ export default new Vuex.Store({
       chartSeries.events.on('inited', (event) => {
         event.target.animate({
           property: 'velocityDecay',
-          to: 0.8
-        }, 2000);
+          to: 1
+        }, 5000);
       });
     },
     setChartData ({commit}, payload) {
@@ -173,8 +173,8 @@ export default new Vuex.Store({
 
       return state.devices.map(node => ({
         id: node.id,
-        name: node.name,
-        connectedTo: node.connectedTo,
+        address: node.address,
+        connected_with: node.connected_with,
         icon: node.type.icon.white
       }))
     },

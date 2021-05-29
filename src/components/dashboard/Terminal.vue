@@ -1,6 +1,6 @@
 <template lang="pug">
 .term-container
-  .loading(v-if="state.socket === null")
+  .loading(v-if="terminalState.socket === null")
     svg.spinner(viewBox="0 0 50 50")
       circle.path(cx="25" cy="25" r="20" fill="none" stroke-width="5")
   .term(ref="terminal")
@@ -13,26 +13,40 @@ import { AttachAddon } from 'xterm-addon-attach';
 import { FitAddon } from 'xterm-addon-fit';
 
 export default {
+  props: [
+    'username',
+    'password',
+  ],
   data () {
     return {
       terminal: null
     }
   },
-  computed: mapState({state: 'terminalWindowState'}),
+  computed: mapState({terminalState: 'terminalWindowState'}),
   mounted () {
     this.terminal = new Terminal({cursorBlink: true});
 
     this.terminal.open(this.$refs.terminal);
-    this.terminal.write(`Connecting to ${this.state.device.address}...\r\n`);
-    
-    const socket = new WebSocket(`ws://127.0.0.1:8000/tunnel?target=${this.state.device.address}`);
+    this.terminal.write(`Connecting to ${this.terminalState.device.address}...\r\n`);
+
+    const query_params = {
+      host: this.terminalState.device.address,
+      port: this.terminalState.method.port,
+      proto: this.terminalState.method.proto,
+      username: this.terminalState.username,
+      password: this.terminalState.password
+    }
+
+    const query_string = Object.entries(query_params).map(param => param.join('=')).join('&');
+
+    const socket = new WebSocket(`ws://127.0.0.1:8000/tunnel?${query_string}`);
 
     socket.onclose = (event) => {
-      this.terminal.write('Connection closed by remote host.');
+      this.terminal.write('\r\nConnection closed by remote host.');
     }
 
     socket.onerror = (event) => {
-      this.terminal.write('Connection to remote host failed.');
+      this.terminal.write('\r\nConnection to remote host failed.');
     }
 
     const attachAddon = new AttachAddon(socket);
