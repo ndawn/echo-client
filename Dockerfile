@@ -11,7 +11,7 @@ FROM nginx:mainline-alpine
 
 WORKDIR /client
 
-COPY --from=dist /client/dist .
+COPY --from=dist /client/dist ./dist/
 COPY --from=dist /client/echo_client_nginx.conf /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
