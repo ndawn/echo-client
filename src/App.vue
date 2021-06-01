@@ -49,8 +49,9 @@ export default {
     //   {pk: 34, name: 'Echo агент',      address: '192.168.0.34', type: 'mobile',       connected_with: [1], connection_options: [['ssh', 22]]},
     //   {pk: 35, name: 'Echo агент',      address: '192.168.0.35', type: null,           connected_with: [1], connection_options: [['ssh', 22]]},
     // ]);
-    axios.get('/api/devices/').then(data => {
-      this.$store.dispatch('setDevices', data);
+    axios.get('/api/devices/').then(response => {
+      console.log(response);
+      this.$store.dispatch('setDevices', JSON.parse(response.data));
     });
   }
 }
