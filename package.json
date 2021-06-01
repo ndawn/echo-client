@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.17",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "force-graph": "^1.39.2",
     "pug": "^3.0.2",

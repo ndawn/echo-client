@@ -1,6 +1,6 @@
 <template lang="pug">
 main.main
-  aside-panel(width="200px" left)
+  aside-panel(width="220px" left)
     item-list(:items="$store.getters.filteredDevices")
   graph-view
   aside-panel(width="300px" right)
