@@ -67,7 +67,7 @@ export default {
     // ]).then(() => {
     //   this.$store.dispatch('setLoading', false);
     // });
-    axios.get('/api/devices/', null, {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
+    axios.get('/api/devices/', {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
       this.$store.dispatch('setDevices', response.data);
     }).catch(error => {
       if (error.response.status === 401 || (error.response.status === 422 && error.response.data.detail === 'Signature has expired')) {

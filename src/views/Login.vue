@@ -52,12 +52,14 @@ export default {
                     password: this.password
                 }
             ).then(response => {
+                console.log(response);
                 localStorage.token = response.data.access_token;
                 this.$router.push('/');
             }).catch(error => {
                 this.error = error;
                 this.$store.dispatch('setLoading', false);
-            }).finally(this.unfreeze);
+                this.unfreeze();
+            });
         }
     },
     components: {
