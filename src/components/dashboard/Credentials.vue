@@ -51,7 +51,8 @@ export default {
 
       axios.get('/api/agents/').then(response => {
         console.log(response);
-        let targetAgent;
+
+        let targetAgent = null;
 
         for (let agent of response.data) {
           if (this.terminalState.device.subnet.pk === agent.subnet.pk) {
@@ -82,7 +83,7 @@ export default {
           }
         ).then(response => {
           console.log(response);
-          this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data});
+          this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
           this.$store.dispatch('setCredentialsActive', false);
         }).catch(error => {
           console.log(error);

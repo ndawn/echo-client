@@ -26,6 +26,10 @@ export default {
     },
     methods: {
         connect () {
+            if (this.currentOption.proto === 'http' || this.currentOption.proto === 'https') {
+                window.open(`${this.currentOption.proto}://${this.device.address}`, '_blank');
+                return;
+            }
             this.$store.dispatch('updateTerminalWindowState', {device: this.device, method: this.currentOption});
             this.$store.dispatch('setCredentialsActive', true);
         },
