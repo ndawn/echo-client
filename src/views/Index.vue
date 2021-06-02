@@ -16,6 +16,7 @@ import ItemList from '../components/dashboard/ItemList.vue';
 import DeviceDetails from '../components/dashboard/DeviceDetails.vue';
 import Modal from '../components/dashboard/Modal.vue';
 import { mapState } from 'vuex';
+import axios from 'axios';
 
 export default {
   computed: mapState(['activeModalComponent']),
