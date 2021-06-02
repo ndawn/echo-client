@@ -13,6 +13,7 @@
 <script>
 import connectIcon from '@/assets/img/mini/connect_white.png';
 import arrowDownIcon from '@/assets/img/mini/arrow_down_white.png';
+import Credentials from '@/components/dashboard/Credentials.vue';
 
 export default {
     props: ['device'],
@@ -31,7 +32,7 @@ export default {
                 return;
             }
             this.$store.dispatch('updateTerminalWindowState', {device: this.device, method: this.currentOption});
-            this.$store.dispatch('setCredentialsActive', true);
+            this.$store.dispatch('setActiveModalComponent', Credentials);
         },
         toggleDropdown () {
             this.dropdownActive = !this.dropdownActive;

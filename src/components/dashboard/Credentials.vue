@@ -29,6 +29,7 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
+import Terminal from '@/components/dashboard/Terminal.vue';
 
 export default {
   data () {
@@ -84,7 +85,7 @@ export default {
         ).then(response => {
           console.log(response);
           this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
-          this.$store.dispatch('setCredentialsActive', false);
+          this.$store.dispatch('setActiveModalComponent', Terminal);
         }).catch(error => {
           console.log(error);
           this.error = error;

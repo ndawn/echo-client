@@ -1,6 +1,6 @@
 <template lang="pug">
 .modal
-  .close-button(@click="thisOnClose")
+  .close-button(@click="onClose")
     img(:src="closeIcon")
   slot
 </template>
@@ -9,11 +9,24 @@
 import crossIconMini from '@/assets/img/mini/cross.png';
 
 export default {
-  props: ['onClose'],
   data () {
     return {
-      thisOnClose: this.onClose.bind(this),
       closeIcon: crossIconMini
+    }
+  },
+  methods: {
+    onClose () {
+      if (this.$store.state.isLoading) {
+        return;
+      }
+
+      this.$store.dispatch('setActiveModalComponent', null);
+
+      this.$slots.default.forEach(slot => {
+        if (slot.componentInstance !== undefined) {
+          slot.componentInstance.onClose && slot.componentInstance.onClose();
+        }
+      })
     }
   }
 }
@@ -34,11 +47,10 @@ export default {
 
   .close-button {
     position: absolute;
-    top: 4px;
-    right: 8px;
-    padding: 12px;
+    top: 0;
+    right: 0;
+    padding: 16.5px;
     line-height: 0;
-    border-radius: 50%;
     transition: background 0.2s ease;
     cursor: pointer;
     user-select: none;

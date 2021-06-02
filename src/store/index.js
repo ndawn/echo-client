@@ -42,7 +42,7 @@ export default new Vuex.Store({
       sid: null
     },
 
-    credentialsActive: false,
+    activeModalComponent: null,
 
     chart: null,
     chartSeries: null,
@@ -115,8 +115,8 @@ export default new Vuex.Store({
         ...payload
       };
     },
-    setCredentialsActive (state, payload) {
-      state.credentialsActive = payload;
+    setActiveModalComponent (state, payload) {
+      state.activeModalComponent = payload;
     }
   },
 
@@ -179,8 +179,8 @@ export default new Vuex.Store({
     updateTerminalWindowState ({commit}, payload) {
       commit('updateTerminalWindowState', payload);
     },
-    setCredentialsActive ({commit}, payload) {
-      commit('setCredentialsActive', payload);
+    setActiveModalComponent ({commit}, payload) {
+      commit('setActiveModalComponent', payload);
     },
     connectToDevice ({commit}, {sid}) {
       commit('setCredentialsActive', false);

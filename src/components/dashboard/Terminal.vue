@@ -11,13 +11,15 @@ import { AttachAddon } from 'xterm-addon-attach';
 import { FitAddon } from 'xterm-addon-fit';
 
 export default {
-  props: [
-    'username',
-    'password',
-  ],
   data () {
     return {
       terminal: null
+    }
+  },
+  methods: {
+    onClose () {
+      this.terminalState.socket && this.terminalState.socket.close();
+      this.$store.dispatch('updateTerminalWindowState', {active: false, device: null, method: null, username: null, password: null});
     }
   },
   computed: mapState({terminalState: 'terminalWindowState'}),
@@ -28,17 +30,6 @@ export default {
     this.terminal.write(`Connecting to ${this.terminalState.device.address}...\r\n`);
 
     this.$store.dispatch('setLoading', false);
-
-    // axios.get('/api/agents/').then(response => {
-    //   let targetAgent;
-
-    //   for (let agent of response.data) {
-    //     if (this.terminalState.device.subnet.pk === agent.subnet.pk) {
-    //       targetAgent = agent;
-    //       break;
-    //     }
-    //   }
-    // });
 
     const socket = new WebSocket(`ws://${this.terminalState.agentAddress}:11007/tunnel?sid=${this.terminalState.sid}`);
 
