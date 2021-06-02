@@ -3,8 +3,8 @@
   .login-form
     .form-line.logo
       .form-item
-          logo
-    .form-line
+          logo(dark)
+    .form-line(v-if="error")
       .form-item
         p.error {{ error }}
     .form-line
@@ -90,8 +90,9 @@ export default {
     background: white;
 
     img.logo {
-      padding: 8px 4px 4px;
-      height: 48px;
+      padding: 24px 4px 0;
+      box-sizing: initial;
+      height: 56px;
     }
 
     .form-line {
@@ -103,7 +104,6 @@ export default {
         padding: 0;
         width: 100%;
         text-align: center;
-        background: #2c2c2c;
       }
 
       .form-item {

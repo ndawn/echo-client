@@ -1,15 +1,26 @@
 <template lang="pug">
-img.logo(:src="logo")
+img.logo(:src="logoIcon()")
 </template>
 
 <script>
-import logo from '@/assets/logo.svg';
+import logoLight from '@/assets/logo_light.svg';
+import logoDark from '@/assets/logo_dark.svg';
 
 export default {
+    props: {
+        light: Boolean,
+        dark: Boolean
+    },
     data () {
         return {
-            logo
+            logoLight,
+            logoDark
         };
+    },
+    methods: {
+        logoIcon () {
+            return this.dark ? logoDark : logoLight;
+        }
     }
 }
 </script>

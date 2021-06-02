@@ -30,7 +30,11 @@ router.beforeEach((to, from, next) => {
             next()
         }
     } else {
-        next({path: '/'})
+        if (to.path !== '/') {
+            next({path: '/'})
+        } else {
+            next()
+        }
     }
 });
 
