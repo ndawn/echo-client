@@ -1,7 +1,6 @@
 import VueRouter from 'vue-router';
 import Index from '@/views/Index.vue'
 import Login from '@/views/Login.vue'
-import Loading from '@/views/Loading.vue'
 
 
 const router = new VueRouter({
