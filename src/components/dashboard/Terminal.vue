@@ -40,7 +40,7 @@ export default {
     //   }
     // });
 
-    const socket = new WebSocket(`ws://${targetAgent.address}/tunnel?sid=${this.terminalState.sid}`);
+    const socket = new WebSocket(`ws://${this.terminalState.agentAddress}/tunnel?sid=${this.terminalState.sid}`);
 
     socket.onclose = (event) => {
       this.terminal.write('\r\nConnection closed by remote host.');
