@@ -50,9 +50,7 @@ export default {
       this.freeze();
       this.$store.dispatch('setLoading', true);
 
-      axios.get('/api/agents/').then(response => {
-        console.log(response);
-
+      axios.get('/api/agents/', {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
         let targetAgent = null;
 
         for (let agent of response.data) {
@@ -61,17 +59,6 @@ export default {
             break;
           }
         }
-
-        console.log({
-          url: `http://${targetAgent.address}:11007/tunnel/create/`,
-          params: {
-            host: this.terminalState.device.address,
-            port: this.terminalState.method.port,
-            proto: this.terminalState.method.proto,
-            username: this.terminalState.username,
-            password: this.terminalState.password
-          }
-        })
 
         axios.post(
           `http://${targetAgent.address}:11007/tunnel/create/`,
