@@ -75,6 +75,9 @@ export default {
         this.$router.push('/login');
       }
     });
+  },
+  mounted () {
+    this.$store.dispatch('setLoading', false);
   }
 }
 </script>
