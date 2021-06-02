@@ -50,6 +50,7 @@ export default {
       this.$store.dispatch('setLoading', true);
 
       axios.get('/api/agents/').then(response => {
+        console.log(response);
         let targetAgent;
 
         for (let agent of response.data) {
@@ -80,14 +81,17 @@ export default {
             password: this.terminalState.password
           }
         ).then(response => {
-          this.$store.dispatch('updateTerminalWindowState', {active: true, sid});
+          console.log(response);
+          this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data});
           this.$store.dispatch('setCredentialsActive', false);
         }).catch(error => {
+          console.log(error);
           this.error = error;
           this.$store.dispatch('setLoading', false);
           this.unfreeze();
         });
       }).catch(error => {
+        console.log(error);
         this.error = error;
         this.$store.dispatch('setLoading', false);
         this.unfreeze();
