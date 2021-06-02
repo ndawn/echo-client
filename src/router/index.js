@@ -23,10 +23,14 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-    if (to.path !== '/login' && localStorage.token === undefined) {
-        next({path: '/login'})
+    if (localStorage.token === undefined) {
+        if (to.path !== '/login') {
+            next({path: '/login'})
+        } else {
+            next()
+        }
     } else {
-        next()
+        next({path: '/'})
     }
 });
 
