@@ -1,7 +1,7 @@
 <template lang="pug">
 .list-item(:class="{active: isActive}" @click="setActive")
   img.icon(:src="itemIcon" alt="")
-  span.name {{ item.name }}
+  span.name {{ item.address }}
 </template>
 
 <script>

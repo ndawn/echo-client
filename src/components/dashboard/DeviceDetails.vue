@@ -9,6 +9,7 @@
             device-connect-button(:device="device" :key="device.id")
     .separator
     device-details-param(name="IP адрес" :value="device.address")
+    device-details-param(name="MAC адрес" :value="device.mac.toUpperCase()")
 .no-device(v-else)
     unicon(name="meh" fill="rgba(0, 0, 0, 0.2)" :width="noDeviceIconSize" :height="noDeviceIconSize")
     h4.title Ничего не выбрано

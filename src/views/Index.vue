@@ -5,8 +5,9 @@ main.main
   graph-view
   aside-panel(width="300px" right)
     device-details
-  modal(v-if="terminalWindowState.active" :onClose="onModalClose")
-    terminal
+  modal(v-if="terminalWindowState.active || credentialsActive" :onClose="onModalClose")
+    credentials(v-if="credentialsActive")
+    terminal(v-if="terminalWindowState.active")
 </template>
 
 <script>
@@ -15,6 +16,7 @@ import GraphView from '../components/dashboard/GraphView.vue';
 import ItemList from '../components/dashboard/ItemList.vue';
 import DeviceDetails from '../components/dashboard/DeviceDetails.vue';
 import Modal from '../components/dashboard/Modal.vue';
+import Credentials from '../components/dashboard/Credentials.vue';
 import Terminal from '../components/dashboard/Terminal.vue';
 import { mapState } from 'vuex';
 
@@ -22,13 +24,18 @@ export default {
   data () {
     return {
       onModalClose (event) {
-        this.$store.state.terminalWindowState.socket.close();
-        this.$store.dispatch('updateTerminalWindowState', {active: false});
+        if (this.$store.state.isLoading) {
+          return;
+        }
+
+        this.$store.dispatch('setCredentialsActive', false);
+        this.$store.state.terminalWindowState.socket && this.$store.state.terminalWindowState.socket.close();
+        this.$store.dispatch('updateTerminalWindowState', {active: false, device: null, method: null, username: null, password: null});
       }
     }
   },
   computed: {
-    ...mapState(['terminalWindowState'])
+    ...mapState(['terminalWindowState', 'credentialsActive', 'isLoading'])
   },
   components: {
     AsidePanel,
@@ -36,6 +43,7 @@ export default {
     ItemList,
     DeviceDetails,
     Modal,
+    Credentials,
     Terminal
   }
 }

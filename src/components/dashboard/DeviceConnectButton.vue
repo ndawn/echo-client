@@ -26,7 +26,8 @@ export default {
     },
     methods: {
         connect () {
-            this.$store.dispatch('connectToDevice', {device: this.device, method: this.currentOption});
+            this.$store.dispatch('updateTerminalWindowState', {device: this.device, method: this.currentOption});
+            this.$store.dispatch('setCredentialsActive', true);
         },
         toggleDropdown () {
             this.dropdownActive = !this.dropdownActive;

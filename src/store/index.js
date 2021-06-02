@@ -12,6 +12,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    isLoading: true,
+
     selectedFilter: {
       title: 'Все устройства',
       deviceType: 'all'
@@ -33,8 +35,14 @@ export default new Vuex.Store({
       active: false,
       device: null,
       method: null,
-      socket: null
+      socket: null,
+      username: null,
+      password: null,
+      agentAddress: null,
+      sid: null
     },
+
+    credentialsActive: false,
 
     chart: null,
     chartSeries: null,
@@ -80,6 +88,9 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setLoading (state, payload) {
+      state.isLoading = payload;
+    },
     setDevices (state, devices) {
       state.devices = devices.map(device => configMapping.injectMapping(device));
     },
@@ -103,12 +114,20 @@ export default new Vuex.Store({
         ...state.terminalWindowState,
         ...payload
       };
+    },
+    setCredentialsActive (state, payload) {
+      state.credentialsActive = payload;
     }
   },
 
   actions: {
+    setLoading ({commit}, payload) {
+      commit('setLoading', payload);
+    },
     setDevices ({commit}, devices) {
-      commit('setDevices', devices);
+      return new Promise((resolve, reject) => {
+        resolve(commit('setDevices', devices));
+      });
     },
     setActiveDevice ({commit}, deviceId) {
       commit('setActiveDevice', deviceId);
@@ -160,8 +179,12 @@ export default new Vuex.Store({
     updateTerminalWindowState ({commit}, payload) {
       commit('updateTerminalWindowState', payload);
     },
-    connectToDevice ({commit}, {device, method}) {
-      commit('updateTerminalWindowState', {active: true, device, method});
+    setCredentialsActive ({commit}, payload) {
+      commit('setCredentialsActive', payload);
+    },
+    connectToDevice ({commit}, {sid}) {
+      commit('setCredentialsActive', false);
+      commit('updateTerminalWindowState', {active: true, sid, username: null, password: null});
     }
   },
 
