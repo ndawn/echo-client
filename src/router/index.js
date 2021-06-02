@@ -4,7 +4,7 @@ import Login from '@/views/Login.vue'
 import Loading from '@/views/Loading.vue'
 
 
-export default new VueRouter({
+const router = new VueRouter({
     routes: [
         {
             path: '/',
@@ -20,3 +20,15 @@ export default new VueRouter({
         }
     ]
 })
+
+
+router.beforeEach((to, from, next) => {
+    if (to.path !== '/login' && localStorage.token === undefined) {
+        next({path: '/login'})
+    } else {
+        next()
+    }
+});
+
+
+export default router;

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import VueRouter from 'vue-router'
 import './registerServiceWorker'
 import store from './store'
 import router from './router'
@@ -10,6 +11,7 @@ Vue.config.productionTip = false
 
 Unicon.add([uniAngleDown, uniMeh])
 Vue.use(Unicon)
+Vue.use(VueRouter)
 
 new Vue({
   store,

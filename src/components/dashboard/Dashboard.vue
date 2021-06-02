@@ -1,7 +1,7 @@
 <template lang="pug">
 .dashboard
   dashboard-header
-  index
+  router-view
 </template>
 
 <script>
