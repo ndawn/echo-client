@@ -7,6 +7,7 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import * as am4plugins_forceDirected from '@amcharts/amcharts4/plugins/forceDirected';
+import axios from 'axios';
 
 Vue.use(Vuex)
 
@@ -30,6 +31,8 @@ export default new Vuex.Store({
     ],
 
     devices: [],
+    subnets: [],
+    user: null,
     activeDevice: null,
     terminalWindowState: {
       active: false,
@@ -94,6 +97,12 @@ export default new Vuex.Store({
     setDevices (state, devices) {
       state.devices = devices.map(device => configMapping.injectMapping(device));
     },
+    setSubnets (state, subnets) {
+      state.subnets = subnets;
+    },
+    setUser (state, payload) {
+      state.user = payload;
+    },
     setActiveDevice (state, deviceId) {
       state.activeDevice = deviceId;
     },
@@ -128,6 +137,21 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         resolve(commit('setDevices', devices));
       });
+    },
+    setSubnets ({commit}, subnets) {
+      return new Promise((resolve, reject) => {
+        resolve(commit('setSubnets', subnets));
+      });
+    },
+    getUser ({commit}) {
+      axios.get('/api/account/', {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
+        commit('setUser', response.data);
+      }).catch(error => {
+        if (error.response.status === 401 || (error.response.status === 422 && error.response.data.detail === 'Signature has expired')) {
+          delete localStorage.token;
+          this.$router.push('/login');
+        }
+      })
     },
     setActiveDevice ({commit}, deviceId) {
       commit('setActiveDevice', deviceId);
@@ -206,6 +230,15 @@ export default new Vuex.Store({
     },
     filteredDevices (state) {
       return state.devices.filter(device => (state.selectedFilter.deviceType === 'all' || device.type.name === state.selectedFilter.deviceType));
+    },
+    listSubnets (state, getters) {
+      return state.subnets.map(subnet => ({...subnet, devices: getters.filteredDevices.filter(device => device.subnet.pk === subnet.pk)}));
+    },
+    listData (state, getters) {
+      return {
+        devices: getters.filteredDevices,
+        subnets: getters.listSubnets
+      }
     }
   }
 })

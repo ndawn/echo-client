@@ -1,12 +1,16 @@
 <template lang="pug">
 .device-details(v-if="device")
-    img.device-icon(:src="deviceIcon")
+    .upper-block
+        img.device-icon(:src="deviceIcon")
+        button.edit-button(type="button" @click="edit")
+            img.edit-icon(:src="editIcon")
+            | Редактировать
     .main-info
         .titles
-            h2.title {{ device.name }}
+            h2.title {{ device.name || 'Без названия' }}
             h4.sub-title {{ device.type.verboseName }}
         .connect-button
-            device-connect-button(:device="device" :key="device.id")
+            device-connect-button(:device="device" :key="device.pk")
     .separator
     device-details-param(name="IP адрес" :value="device.address")
     device-details-param(name="MAC адрес" :value="device.mac.toUpperCase()")
@@ -19,12 +23,20 @@
 import { mapState } from 'vuex';
 import DeviceDetailsParam from '@/components/dashboard/DeviceDetailsParam.vue';
 import DeviceConnectButton from '@/components/dashboard/DeviceConnectButton.vue';
+import EditDevice from '@/components/dashboard/EditDevice.vue';
+import editIcon from '@/assets/img/mini/edit.png';
 
 export default {
     data () {
         return {
+            editIcon,
             noDeviceIconSize: 192,
             ...mapState({activeDevice: 'device'})
+        }
+    },
+    methods: {
+        edit () {
+            this.$store.dispatch('setActiveModalComponent', EditDevice);
         }
     },
     computed: {
@@ -37,18 +49,43 @@ export default {
     },
     components: {
         DeviceDetailsParam,
-        DeviceConnectButton
+        DeviceConnectButton,
+        EditDevice
     }
 }
 </script>
 
 <style lang="scss">
 .device-details {
-    .device-icon {
-        margin-top: 32px;
-        padding: 0 24px;
-        width: 100px;
-        fill: #3183e6;
+    .upper-block {
+        .device-icon {
+            display: inline-block;
+            margin-top: 32px;
+            padding: 0 24px;
+            width: 100px;
+            fill: #3183e6;
+        }
+
+        .edit-button {
+            margin: 40px 0 0 48px;
+            display: inline-block;
+            vertical-align: top;
+            font-family: 'Open Sans';
+            font-size: 12px;
+            border: none;
+            outline: none;
+            background: none;
+            cursor: pointer;
+
+            .edit-icon {
+                padding-right: 4px;
+                vertical-align: sub;
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 
     .main-info {
