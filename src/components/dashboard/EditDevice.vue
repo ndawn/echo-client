@@ -40,6 +40,7 @@
 import axios from 'axios';
 import { mapState } from 'vuex';
 import config from '@/config';
+import configMapping from '@/utils/configMapping';
 
 export default {
   data () {
@@ -71,7 +72,7 @@ export default {
       axios.put(`/api/devices/${this.device.pk}`, {}, {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
         this.error = false;
         this.device.name = this.name;
-        this.device.type = this.type;
+        this.device.type = configMapping.type(this.type);
         this.message = 'Сохранено!';
       }).catch(error => {
         console.log(error);
