@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import Dashboard from './components/dashboard/Dashboard.vue';
 import { mapState } from 'vuex';
 
@@ -15,6 +14,9 @@ export default {
   computed: mapState(['isLoading']),
   components: {
     Dashboard
+  },
+  mounted () {
+    this.$store.dispatch('getUser');
   }
 }
 </script>
