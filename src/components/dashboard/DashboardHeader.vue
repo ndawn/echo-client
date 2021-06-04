@@ -25,6 +25,7 @@ header.header
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Logo from '@/components/dashboard/Logo.vue';
 import CreateAgent from '@/components/dashboard/CreateAgent.vue';
 import CreateSubnet from '@/components/dashboard/CreateSubnet.vue';
@@ -38,11 +39,6 @@ import axios from 'axios';
 export default {
   data () {
     return {
-      // user: {
-      //   first_name: 'Александр',
-      //   last_name: 'Цветков'
-      // },
-      user: null,
       createIcon,
       userIcon,
       echoIcon,
@@ -55,7 +51,8 @@ export default {
   computed: {
     userName () {
       return this.user ? `${this.user.first_name} ${this.user.last_name}` : '';
-    }
+    },
+    ...mapState(['user'])
   },
   methods: {
     toggleCreate () {
@@ -79,22 +76,6 @@ export default {
       Logo,
       CreateAgent,
       CreateSubnet
-  },
-  beforeMount () {
-    if (localStorage.token === undefined) {
-      this.$router.push('/login');
-      return;
-    }
-
-    axios.get('/api/account/', {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
-       this.user = response.data;
-    }).catch(error => {
-      console.log(error);
-      if (error.response.status === 401 || (error.response.status === 422 && error.response.data.detail === 'Signature has expired')) {
-        delete localStorage.token;
-        this.$router.push('/login');
-      }
-    })
   }
 }
 </script>

@@ -54,6 +54,7 @@ export default {
             ).then(response => {
                 console.log(response);
                 localStorage.token = response.data.access_token;
+                this.$store.dispatch('getUser');
                 this.$router.push('/');
             }).catch(error => {
                 this.error = error;
