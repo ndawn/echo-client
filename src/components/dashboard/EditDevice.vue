@@ -69,7 +69,7 @@ export default {
       this.freeze();
       this.$store.dispatch('setLoading', true);
 
-      axios.put(`/api/devices/${this.device.pk}`, {}, {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
+      axios.put(`/api/devices/${this.device.pk}`, {name: this.name, type: this.type}, {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
         this.error = false;
         this.device.name = this.name;
         this.device.type = configMapping.type(this.type);
