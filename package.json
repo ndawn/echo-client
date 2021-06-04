@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "force-graph": "^1.39.2",
+    "ip": "^1.1.5",
     "pug": "^3.0.2",
     "pug-loader": "^2.4.0",
     "pug-plain-loader": "^1.1.0",
@@ -25,6 +26,7 @@
     "xterm-addon-fit": "^0.5.0"
   },
   "devDependencies": {
+    "@types/ip": "^1.1.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-pwa": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",

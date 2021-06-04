@@ -73,8 +73,8 @@ export default {
 
     .list-type-button {
       display: inline-block;
-      padding: 16.5px;
-      line-height: 0;
+      padding: 0 16.5px;
+      line-height: 48px;
       transition: background 0.2s ease;
       cursor: pointer;
       user-select: none;
@@ -85,6 +85,10 @@ export default {
 
       &:active {
         background: rgba(0, 0, 0, 0.3);
+      }
+
+      img {
+        vertical-align: sub;
       }
     }
   }

@@ -31,6 +31,7 @@ export default new Vuex.Store({
     ],
 
     devices: [],
+    agents: [],
     subnets: [],
     user: null,
     activeDevice: null,
@@ -97,8 +98,17 @@ export default new Vuex.Store({
     setDevices (state, devices) {
       state.devices = devices.map(device => configMapping.injectMapping(device));
     },
+    setAgents (state, agents) {
+      state.agents = agents;
+    },
+    addAgents (state, agents) {
+      state.agents.push(...agents);
+    },
     setSubnets (state, subnets) {
       state.subnets = subnets;
+    },
+    addSubnets (state, subnets) {
+      state.subnets.push(...subnets);
     },
     setUser (state, payload) {
       state.user = payload;
@@ -138,9 +148,24 @@ export default new Vuex.Store({
         resolve(commit('setDevices', devices));
       });
     },
+    setAgents ({commit}, agents) {
+      return new Promise((resolve, reject) => {
+        resolve(commit('setAgents', agents));
+      });
+    },
+    addAgents ({commit}, agents) {
+      return new Promise((resolve, reject) => {
+        resolve(commit('addAgents', agents));
+      });
+    },
     setSubnets ({commit}, subnets) {
       return new Promise((resolve, reject) => {
         resolve(commit('setSubnets', subnets));
+      });
+    },
+    addSubnets ({commit}, subnets) {
+      return new Promise((resolve, reject) => {
+        resolve(commit('addSubnets', subnets));
       });
     },
     getUser ({commit}) {
@@ -189,13 +214,6 @@ export default new Vuex.Store({
       chartSeries.nodes.template.events.on('dragstop', (event) => {
         chart.zoomable = true;
       });
-
-      chartSeries.events.on('inited', (event) => {
-        event.target.animate({
-          property: 'velocityDecay',
-          to: 1
-        }, 5000);
-      });
     },
     setChartData ({commit}, payload) {
       commit('setChartData', payload);
@@ -233,6 +251,9 @@ export default new Vuex.Store({
     },
     listSubnets (state, getters) {
       return state.subnets.map(subnet => ({...subnet, devices: getters.filteredDevices.filter(device => device.subnet.pk === subnet.pk)}));
+    },
+    freeSubnets (state) {
+      return state.subnets.filter(subnet => state.agents.filter(agent => agent.subnet.pk === subnet.pk).length === 0);
     },
     listData (state, getters) {
       return {

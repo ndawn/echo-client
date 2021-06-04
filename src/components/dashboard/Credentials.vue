@@ -50,35 +50,28 @@ export default {
       this.freeze();
       this.$store.dispatch('setLoading', true);
 
-      axios.get('/api/agents/', {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
-        let targetAgent = null;
+      let targetAgent = null;
 
-        for (let agent of response.data) {
-          if (this.terminalState.device.subnet.pk === agent.subnet.pk) {
-            targetAgent = agent;
-            break;
-          }
+      for (let agent of this.$store.state.agents) {
+        if (this.terminalState.device.subnet.pk === agent.subnet.pk) {
+          targetAgent = agent;
+          break;
         }
+      }
 
-        axios.post(
-          `http://${targetAgent.address}:11007/tunnel/create/`,
-          {
-            host: this.terminalState.device.address,
-            port: this.terminalState.method.port,
-            proto: this.terminalState.method.proto,
-            username: this.terminalState.username,
-            password: this.terminalState.password
-          }
-        ).then(response => {
-          console.log(response);
-          this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
-          this.$store.dispatch('setActiveModalComponent', Terminal);
-        }).catch(error => {
-          console.log(error);
-          this.error = error;
-          this.$store.dispatch('setLoading', false);
-          this.unfreeze();
-        });
+      axios.post(
+        `http://${targetAgent.address}:11007/tunnel/create/`,
+        {
+          host: this.terminalState.device.address,
+          port: this.terminalState.method.port,
+          proto: this.terminalState.method.proto,
+          username: this.terminalState.username,
+          password: this.terminalState.password
+        }
+      ).then(response => {
+        console.log(response);
+        this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
+        this.$store.dispatch('setActiveModalComponent', Terminal);
       }).catch(error => {
         console.log(error);
         this.error = error;

@@ -1,46 +1,28 @@
 <template lang="pug">
-.edit-device
+.create-agent
   .form-line
     .form-item
-      h3.title Редактирование устройства
+      h3.title Создание агента
   .form-line(v-if="error")
     .form-item
       p(:class="{error, success: !error}") {{ message }}
   .form-line
     .form-item.subnet
       label.label(for="formSubnet") Подсеть
-      input.input#formSubnet(type="text" disabled :value="device.subnet.cidr")
-  .form-line
-    .form-item.hostname
-      label.label(for="formHostname") Имя хоста
-      input.input#formHostname(type="text" disabled :value="device.hostname")
+      select.input#formSubnet(v-model="subnet")
+        option(v-for="subnet in $store.getters.freeSubnets" :disabled="frozen" :value="subnet") {{ subnet.cidr }}
   .form-line
     .form-item.address
       label.label(for="formAddress") IP адрес
-      input.input#formAddress(type="text" disabled :value="device.address")
-  .form-line
-    .form-item.mac
-      label.label(for="formMac") MAC адрес
-      input.input#formMac(type="text" disabled :value="device.mac")
-  .form-line
-    .form-item.name
-      label.label(for="formName") Имя устройства
-      input.input#formName(type="text" :disabled="frozen" v-model="name")
-  .form-line
-    .form-item.type
-      label.label(for="formType") Тип устройства
-      select.input#formType(:disabled="frozen" v-model="type")
-        option(v-for="typeOption in types" :disabled="frozen" :value="typeOption.name") {{ typeOption.verboseName }}
+      input.input#formAddress(type="text" :disabled="frozen" v-model="address" :class="{error: addressInvalid, highlighted: addressHighlighted}")
   .form-line
     .form-item.button
-      button.button(type="button" :disabled="frozen" @click="handleSaveClick") Сохранить
+      button.button(type="button" :disabled="frozen" @click="handleSaveClick") Создать
 </template>
 
 <script>
 import axios from 'axios';
-import { mapState } from 'vuex';
-import config from '@/config';
-import configMapping from '@/utils/configMapping';
+import ip from 'ip';
 
 export default {
   data () {
@@ -48,15 +30,11 @@ export default {
       error: false,
       message: null,
       frozen: false,
-      name: '',
-      type: '',
-      types: config.types
+      address: '',
+      addressInvalid: false,
+      addressHighlighted: false,
+      subnet: null
     }
-  },
-  computed: {
-    device () {
-      return this.$store.state.devices.find(dvc => dvc.id === this.$store.state.activeDevice) || null;
-    },
   },
   methods: {
     freeze () {
@@ -65,15 +43,35 @@ export default {
     unfreeze () {
       this.frozen = false;
     },
-    async handleSaveClick () {
+    blink (param) {
+      this[param] = true;
+      setTimeout(() => {this[param] = false}, 1000);
+    },
+    validateAddress (value) {
+      try {
+        if (!ip.cidrSubnet(this.subnet.cidr).contains(value)) {
+          this.addressInvalid = true;
+          return;
+        }
+      } catch {
+        this.addressInvalid = true;
+        return;
+      }
+      this.addressInvalid = false;
+    },
+    handleSaveClick () {
+      if (this.addressInvalid) {
+        this.blink('addressHighlighted');
+        return;
+      }
+
       this.freeze();
       this.$store.dispatch('setLoading', true);
 
-      axios.put(`/api/devices/${this.device.pk}`, {}, {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
+      axios.post('/api/agents/', {address: this.address, subnet_id: this.subnet.pk}, {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
+        this.$store.dispatch('addAgents', [response.data]);
         this.error = false;
-        this.device.name = this.name;
-        this.device.type = configMapping.type(this.type);
-        this.message = 'Сохранено!';
+        this.message = 'Агент успешно создан и развернут!';
 
         setTimeout(() => {this.$store.dispatch('setActiveModalComponent', null)}, 3000);
       }).catch(error => {
@@ -86,16 +84,20 @@ export default {
       });
     }
   },
+  watch: {
+    address (value) {
+      this.validateAddress(value);
+    }
+  },
   mounted () {
-      this.name = this.device.name;
-      this.type = this.device.type;
+    window.$$ip = ip;
   }
 }
 </script>
 
 
 <style scoped lang="scss">
-.edit-device {
+.create-agent {
   padding: 16px 12px;
   width: 300px;
   background: white;
@@ -130,6 +132,15 @@ export default {
         border: 1px solid #ccc;
         outline: none;
         border-radius: 2px;
+        transition: color 0.2s ease;
+
+        &.error {
+          color: darkred;
+        }
+
+        &.error.highlighted {
+          color: red;
+        }
       }
 
       &.host {
