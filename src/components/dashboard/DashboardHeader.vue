@@ -37,10 +37,11 @@ import logoutIcon from '@/assets/img/mini/logout.png';
 export default {
   data () {
     return {
-      user: {
-        first_name: 'Александр',
-        last_name: 'Цветков'
-      },
+      // user: {
+      //   first_name: 'Александр',
+      //   last_name: 'Цветков'
+      // },
+      user: null,
       createIcon,
       userIcon,
       echoIcon,
@@ -79,20 +80,20 @@ export default {
       CreateSubnet
   },
   beforeMount () {
-    // if (localStorage.token === undefined) {
-    //   this.$router.push('/login');
-    //   return;
-    // }
+    if (localStorage.token === undefined) {
+      this.$router.push('/login');
+      return;
+    }
 
-    // axios.get('/api/account/', {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
-    //    this.user = response.data;
-    // }).catch(error => {
-    //   console.log(error);
-    //   if (error.response.status === 401 || (error.response.status === 422 && error.response.data.detail === 'Signature has expired')) {
-    //     delete localStorage.token;
-    //     this.$router.push('/login');
-    //   }
-    // })
+    axios.get('/api/account/', {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
+       this.user = response.data;
+    }).catch(error => {
+      console.log(error);
+      if (error.response.status === 401 || (error.response.status === 422 && error.response.data.detail === 'Signature has expired')) {
+        delete localStorage.token;
+        this.$router.push('/login');
+      }
+    })
   }
 }
 </script>
