@@ -33,6 +33,7 @@ import userIcon from '@/assets/img/mini/user.png';
 import echoIcon from '@/assets/img/mini/echo.png';
 import subnetIcon from '@/assets/img/mini/subnet.png';
 import logoutIcon from '@/assets/img/mini/logout.png';
+import axios from 'axios';
 
 export default {
   data () {
