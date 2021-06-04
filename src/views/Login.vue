@@ -52,7 +52,6 @@ export default {
                     password: this.password
                 }
             ).then(response => {
-                console.log(response);
                 localStorage.token = response.data.access_token;
                 this.$store.dispatch('getUser');
                 this.$router.push('/');

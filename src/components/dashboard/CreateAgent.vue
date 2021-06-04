@@ -3,7 +3,7 @@
   .form-line
     .form-item
       h3.title Создание агента
-  .form-line(v-if="error")
+  .form-line(v-if="message")
     .form-item
       p(:class="{error, success: !error}") {{ message }}
   .form-line

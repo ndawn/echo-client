@@ -69,7 +69,6 @@ export default {
           password: this.terminalState.password
         }
       ).then(response => {
-        console.log(response);
         this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
         this.$store.dispatch('setActiveModalComponent', Terminal);
       }).catch(error => {

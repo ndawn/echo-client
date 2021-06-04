@@ -2,7 +2,7 @@
 .device-connect-button
     button.button.connect(:class="{disabled: !device.connection_options}" type="button" @click="handleConnectClick" title="Подключиться к устройству")
         img.icon(:src="connectIcon")
-        | {{ device.connection_options ? currentOption.name : 'Подключение недоступно' }}
+        | {{ currentOption ? currentOption.name : 'Подключение недоступно' }}
     button.button.choose(:class="{disabled: !device.connection_options}" type="button" title="Подключиться к устройству" @click.stop="toggleDropdown")
         img.icon(:src="dropdownIcon")
     .dropdown(:class="{active: dropdownActive}" v-if="device.connection_options")
@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         connect () {
-            if (this.currentOption.proto === 'http' || this.currentOption.proto === 'https') {
+            if (['http', 'https'].includes(this.currentOption.proto)) {
                 window.open(`${this.currentOption.proto}://${this.device.address}`, '_blank');
                 return;
             }
