@@ -16,6 +16,14 @@
       label.label(for="formAddress") IP адрес
       input.input#formAddress(type="text" :disabled="frozen" v-model="address" :class="{error: addressInvalid, highlighted: addressHighlighted}")
   .form-line
+    .form-item.username
+      label.label(for="formUsername") Логин
+      input.input#formAddress(type="text" :disabled="frozen" v-model="username")
+  .form-line
+    .form-item.password
+      label.label(for="formPassword") Пароль
+      input.input#formPassword(type="password" :disabled="frozen" v-model="password")
+  .form-line
     .form-item.button
       button.button(type="button" :disabled="frozen" @click="handleSaveClick") Создать
 </template>
@@ -33,7 +41,9 @@ export default {
       address: '',
       addressInvalid: false,
       addressHighlighted: false,
-      subnet: null
+      subnet: null,
+      username: '',
+      password: ''
     }
   },
   methods: {
@@ -68,7 +78,18 @@ export default {
       this.freeze();
       this.$store.dispatch('setLoading', true);
 
-      axios.post('/api/agents/', {address: this.address, subnet_id: this.subnet.pk}, {headers: {Authorization: `Bearer ${localStorage.token}`}}).then(response => {
+      axios.post(
+        '/api/agents/',
+        {
+          address: this.address,
+          subnet_id: this.subnet.pk,
+          username: this.username,
+          password: this.password,
+        },
+        {
+          headers: {Authorization: `Bearer ${localStorage.token}`}
+        }
+      ).then(response => {
         this.$store.dispatch('addAgents', [response.data]);
         this.error = false;
         this.message = 'Агент успешно создан и развернут!';
@@ -88,9 +109,6 @@ export default {
     address (value) {
       this.validateAddress(value);
     }
-  },
-  mounted () {
-    window.$$ip = ip;
   }
 }
 </script>
