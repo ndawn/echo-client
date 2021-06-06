@@ -7,6 +7,9 @@
     .form-item
       p(:class="{error, success: !error}") {{ message }}
   .form-line
+    .form-item
+      p Процесс развертывания займет некоторое время
+  .form-line
     .form-item.subnet
       label.label(for="formSubnet") Подсеть
       select.input#formSubnet(v-model="subnet")
