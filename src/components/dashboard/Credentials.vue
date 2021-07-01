@@ -13,14 +13,16 @@
     .form-item.port
       label.label(for="formPort") Порт
       input.input#formPort(type="text" disabled :value="terminalState.method.port")
-  .form-line
+  .form-line(v-if="credentialsEnabled")
     .form-item.username
       label.label(for="formUsername") Логин
-      input.input#formUsername(type="text" :disabled="frozen" v-model="terminalState.username")
-  .form-line
+      input.input.checkbox#formUsernameRequired(type="checkbox" :disabled="frozen" v-model="usernameRequired")
+      input.input#formUsername(type="text" :disabled="frozen || !usernameRequired" v-model="terminalState.username")
+  .form-line(v-if="credentialsEnabled")
     .form-item.password
       label.label(for="formPassword") Пароль
-      input.input#formPassword(type="password" :disabled="frozen" v-model="terminalState.password")
+      input.input.checkbox#formPasswordRequired(type="checkbox" :disabled="frozen" v-model="passwordRequired")
+      input.input#formPassword(type="password" :disabled="frozen || !passwordRequired" v-model="terminalState.password")
   .form-line
     .form-item.button
       button.button(type="button" :disabled="frozen" @click="handleConnectClick") Подключиться
@@ -35,7 +37,10 @@ export default {
   data () {
     return {
       error: null,
-      frozen: false
+      frozen: false,
+      credentialsEnabled: false,
+      usernameRequired: true,
+      passwordRequired: true
     }
   },
   computed: mapState({terminalState: 'terminalWindowState'}),
@@ -62,11 +67,15 @@ export default {
       axios.post(
         `http://${targetAgent.address}:11007/tunnel/create/`,
         {
+          user_access_token: localStorage.accessToken,
           host: this.terminalState.device.address,
           port: this.terminalState.method.port,
           proto: this.terminalState.method.proto,
+          auth_method: 'password',
           username: this.terminalState.username,
-          password: this.terminalState.password
+          password: this.terminalState.password,
+          username_required: this.usernameRequired,
+          password_required: this.passwordRequired
         }
       ).then(response => {
         this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
@@ -78,6 +87,28 @@ export default {
         this.unfreeze();
       });
     }
+  },
+  beforeMount () {
+    this.$store.dispatch('setLoading', true);
+
+    axios.post(
+      `https://${targetAgent.address}:11007/tunnel/create/`,
+      {
+        user_access_token: localStorage.accessToken,
+        host: this.terminalState.device.address,
+        port: this.terminalState.method.port,
+        proto: this.terminalState.method.proto,
+        auth_method: 'password'
+      }
+    ).then(response => {
+      this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
+      this.$store.dispatch('setActiveModalComponent', Terminal);
+    }).catch(error => {
+      console.log(error);
+      this.error = error;
+      this.$store.dispatch('setLoading', false);
+      this.unfreeze();
+    });
   }
 }
 </script>

@@ -2,9 +2,16 @@
 .device-details(v-if="device")
     .upper-block
         img.device-icon(:src="deviceIcon")
-        button.edit-button(type="button" @click="edit")
-            img.edit-icon(:src="editIcon")
-            | Редактировать
+        .buttons
+            button.edit-button(type="button" @click="edit")
+                img.edit-icon(:src="editIcon")
+                | Редактировать
+            //- button.destroy-button(v-if="device.type.name === 'echo'" type="button" @click="destroyAgent")
+            //-     img.destroy-icon(:src="echoDestroyIcon")
+            //-     | Удалить агента
+            //- button.delete-button(type="button" @click="deleteDevice")
+            //-     img.delete-icon(:src="deleteIcon")
+            //-     | Удалить
     .main-info
         .titles
             h2.title {{ device.name || 'Без названия' }}
@@ -25,11 +32,15 @@ import DeviceDetailsParam from '@/components/dashboard/DeviceDetailsParam.vue';
 import DeviceConnectButton from '@/components/dashboard/DeviceConnectButton.vue';
 import EditDevice from '@/components/dashboard/EditDevice.vue';
 import editIcon from '@/assets/img/mini/edit.png';
+// import echoDestroyIcon from '@/assets/img/mini/echo_destroy.png';
+// import deleteIcon from '@/assets/img/mini/cross_red.png';
 
 export default {
     data () {
         return {
             editIcon,
+            echoDestroyIcon,
+            deleteIcon,
             noDeviceIconSize: 192,
             ...mapState({activeDevice: 'device'})
         }
@@ -58,32 +69,40 @@ export default {
 <style lang="scss">
 .device-details {
     .upper-block {
+        display: flex;
+        margin-top: 32px;
+
         .device-icon {
-            display: inline-block;
-            margin-top: 32px;
             padding: 0 24px;
             width: 100px;
             fill: #3183e6;
         }
 
-        .edit-button {
-            margin: 40px 0 0 48px;
-            display: inline-block;
-            vertical-align: top;
-            font-family: 'Open Sans';
-            font-size: 12px;
-            border: none;
-            outline: none;
-            background: none;
-            cursor: pointer;
+        .buttons {
+            .edit-button, .destroy-button, .delete-button {
+                margin: 12px;
+                padding-left: 16px;
+                display: inline-block;
+                vertical-align: top;
+                font-family: 'Open Sans';
+                font-size: 12px;
+                border: none;
+                outline: none;
+                background: none;
+                cursor: pointer;
 
-            .edit-icon {
-                padding-right: 4px;
-                vertical-align: sub;
+                .edit-icon, .destroy-icon, .delete-icon {
+                    padding-right: 4px;
+                    vertical-align: sub;
+                }
+
+                &:hover {
+                    text-decoration: underline;
+                }
             }
 
-            &:hover {
-                text-decoration: underline;
+            .destroy-button, .delete-button {
+                color: darkred;
             }
         }
     }
