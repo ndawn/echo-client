@@ -81,10 +81,9 @@ export default {
         this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
         this.$store.dispatch('setActiveModalComponent', Terminal);
       }).catch(error => {
-        console.log(error);
-        this.error = error;
         this.$store.dispatch('setLoading', false);
         this.unfreeze();
+        this.credentialsEnabled = true;
       });
     }
   },
