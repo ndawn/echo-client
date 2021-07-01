@@ -39,8 +39,8 @@ export default {
     data () {
         return {
             editIcon,
-            echoDestroyIcon,
-            deleteIcon,
+            // echoDestroyIcon,
+            // deleteIcon,
             noDeviceIconSize: 192,
             ...mapState({activeDevice: 'device'})
         }
