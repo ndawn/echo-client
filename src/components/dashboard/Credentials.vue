@@ -88,7 +88,17 @@ export default {
     }
   },
   beforeMount () {
+    this.freeze();
     this.$store.dispatch('setLoading', true);
+
+    let targetAgent = null;
+
+    for (let agent of this.$store.state.agents) {
+      if (this.terminalState.device.subnet.pk === agent.subnet.pk) {
+        targetAgent = agent;
+        break;
+      }
+    }
 
     axios.post(
       `https://${targetAgent.address}:11007/tunnel/create/`,
