@@ -31,7 +31,7 @@ export default {
 
     this.$store.dispatch('setLoading', false);
 
-    const socket = new WebSocket(`wss://${this.terminalState.agentAddress}:11007/tunnel?sid=${this.terminalState.sid}`);
+    const socket = new WebSocket(`ws://${this.terminalState.agentAddress}:11007/tunnel?sid=${this.terminalState.sid}`);
 
     socket.onclose = (event) => {
       this.terminal.write('\r\nConnection closed by remote host.');

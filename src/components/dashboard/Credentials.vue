@@ -101,7 +101,7 @@ export default {
     }
 
     axios.post(
-      `https://${targetAgent.address}:11007/tunnel/create/`,
+      `http://${targetAgent.address}:11007/tunnel/create/`,
       {
         user_access_token: localStorage.accessToken,
         host: this.terminalState.device.address,
