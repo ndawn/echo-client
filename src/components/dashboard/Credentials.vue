@@ -52,6 +52,7 @@ export default {
       this.frozen = false;
     },
     async handleConnectClick () {
+      this.error = null;
       this.freeze();
       this.$store.dispatch('setLoading', true);
 
@@ -67,7 +68,7 @@ export default {
       axios.post(
         `http://${targetAgent.address}:11007/tunnel/create/`,
         {
-          user_access_token: localStorage.accessToken,
+          user_access_token: localStorage.token,
           host: this.terminalState.device.address,
           port: this.terminalState.method.port,
           proto: this.terminalState.method.proto,
@@ -81,6 +82,8 @@ export default {
         this.$store.dispatch('updateTerminalWindowState', {active: true, sid: response.data, agentAddress: targetAgent.address});
         this.$store.dispatch('setActiveModalComponent', Terminal);
       }).catch(error => {
+        console.log(error.response.data);
+        this.error = error.response.data.detail;
         this.$store.dispatch('setLoading', false);
         this.unfreeze();
         this.credentialsEnabled = true;
@@ -107,6 +110,8 @@ export default {
         host: this.terminalState.device.address,
         port: this.terminalState.method.port,
         proto: this.terminalState.method.proto,
+        username_required: true,
+        password_required: true,
         auth_method: 'password'
       }
     ).then(response => {
