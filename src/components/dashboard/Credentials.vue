@@ -87,7 +87,7 @@ export default {
       });
     }
   },
-  beforeMount () {
+  mounted () {
     this.freeze();
     this.$store.dispatch('setLoading', true);
 
@@ -103,7 +103,7 @@ export default {
     axios.post(
       `http://${targetAgent.address}:11007/tunnel/create/`,
       {
-        user_access_token: localStorage.accessToken,
+        user_access_token: localStorage.token,
         host: this.terminalState.device.address,
         port: this.terminalState.method.port,
         proto: this.terminalState.method.proto,
@@ -117,6 +117,7 @@ export default {
       this.error = error;
       this.$store.dispatch('setLoading', false);
       this.unfreeze();
+      this.credentialsEnabled = true;
     });
   }
 }
