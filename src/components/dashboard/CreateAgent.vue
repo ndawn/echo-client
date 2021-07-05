@@ -99,9 +99,9 @@ export default {
 
         setTimeout(() => {this.$store.dispatch('setActiveModalComponent', null)}, 3000);
       }).catch(error => {
-        console.log(error);
+        console.log(error.response.data);
         this.error = true;
-        this.message = error;
+        this.message = error.response.data.detail;
       }).finally(() => {
           this.$store.dispatch('setLoading', false);
           this.unfreeze();

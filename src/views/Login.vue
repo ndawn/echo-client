@@ -56,7 +56,8 @@ export default {
                 this.$store.dispatch('getUser');
                 this.$router.push('/');
             }).catch(error => {
-                this.error = error;
+                console.log(error.response.data);
+                this.error = error.response.data.detail;
                 this.$store.dispatch('setLoading', false);
                 this.unfreeze();
             });
